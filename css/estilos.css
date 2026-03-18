@@ -14,6 +14,7 @@
     --text-muted: #8892a4;
     --shadow-sm: 0 2px 8px rgba(67,97,238,0.07);
     --shadow: 0 6px 24px rgba(67,97,238,0.10);
+    --warning: #d29922;
     --radius: 14px;
 }
 
@@ -428,6 +429,45 @@ input:focus, select:focus {
 
 .empty-state { text-align: center; padding: 36px 20px; color: var(--text-muted); }
 .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+/* ===== BARRA DE PROGRESO DE PRESUPUESTO ===== */
+.progreso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.progreso-restante {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--success);
+}
+
+.barra-container {
+    height: 10px;
+    background: var(--surface-2);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+}
+
+.barra-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: var(--success);
+    transition: width 0.5s ease, background 0.4s ease;
+    min-width: 2px;
+}
+
+.progreso-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
 .empty-state p { font-size: 0.9rem; }
 
 /* ===== ANIMACIÓN ===== */

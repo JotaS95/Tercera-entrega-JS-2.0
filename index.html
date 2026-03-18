@@ -79,6 +79,21 @@
                 </div>
             </div>
 
+            <!-- Barra de Presupuesto -->
+            <div class="card" id="card-progreso" style="display:none;">
+                <div class="progreso-header">
+                    <span class="card-title" style="margin:0; border:none; padding:0;">💰 Presupuesto Disponible</span>
+                    <span class="progreso-restante" id="progreso-restante-label">$0 restantes</span>
+                </div>
+                <div class="barra-container">
+                    <div class="barra-fill" id="barra-fill"></div>
+                </div>
+                <div class="progreso-footer">
+                    <span id="progreso-pct">0% usado</span>
+                    <span id="progreso-total"></span>
+                </div>
+            </div>
+
             <!-- Configuración -->
             <div class="card">
                 <p class="card-title">⚙ Configuración</p>
@@ -97,7 +112,7 @@
                         <input type="text" id="input-descripcion" placeholder="Descripción (ej: Supermercado)">
                     </div>
                     <div class="form-row form-row-2">
-                        <input type="number" id="input-monto" placeholder="Monto ($)">
+                        <input type="text" id="input-monto" placeholder='Monto (ej: 1500 o 1500,50)' inputmode="decimal">
                         <select id="select-tipo">
                             <option value="gasto">💸 Gasto</option>
                             <option value="ingreso">💰 Ingreso</option>

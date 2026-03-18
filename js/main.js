@@ -75,7 +75,7 @@ const App = {
         e.preventDefault();
 
         const descripcion = document.getElementById("input-descripcion").value.trim();
-        const monto = parseFloat(document.getElementById("input-monto").value);
+        const monto = this.parsearMonto(document.getElementById("input-monto").value);
         const tipo = document.getElementById("select-tipo").value;
 
         if (descripcion === "") {
@@ -84,12 +84,12 @@ const App = {
         }
 
         if (isNaN(monto) || monto <= 0) {
-            UIManager.notificar("Ingresá un monto mayor a 0", "error");
+            UIManager.notificar("Ingresá un monto válido mayor a 0 (ej: 1500 o 1500,50)", "error");
             return;
         }
 
         const nueva = {
-            id: Date.now(),      // timestamp también sirve como fecha/hora
+            id: Date.now(),
             descripcion: descripcion,
             monto: monto,
             tipo: tipo
@@ -100,6 +100,24 @@ const App = {
         e.target.reset();
         UIManager.notificar("Movimiento registrado ✓");
         this.actualizarUI();
+    },
+
+    // Normalizar montos argentinos: acepta 1000 / 1000.50 / 1000,50 / 1.000,50
+    parsearMonto(valor) {
+        let raw = String(valor).trim();
+        // Estilo europeo/AR con punto de miles y coma decimal: "1.500,50"
+        if (raw.includes(".") && raw.includes(",")) {
+            raw = raw.replace(/\./g, "").replace(",", ".");
+        }
+        // Solo coma como decimal: "1500,50"
+        else if (raw.includes(",")) {
+            raw = raw.replace(",", ".");
+        }
+        // Solo punto → si es "1.000" (3 dígitos exactos al final) lo trata como miles
+        else if (/^\d+\.\d{3}$/.test(raw)) {
+            raw = raw.replace(".", "");
+        }
+        return parseFloat(raw);
     },
 
     cambiarPresupuesto() {
@@ -174,8 +192,21 @@ const App = {
     },
 
     actualizarUI() {
-        UIManager.actualizarStats(this.presupuesto, this.transacciones);
+        const { balance, totalGastos } = UIManager.actualizarStats(this.presupuesto, this.transacciones);
         UIManager.renderizarLista(this.transacciones, (id) => this.eliminarTransaccion(id));
+
+        const pct = UIManager.actualizarProgreso(this.presupuesto, totalGastos);
+
+        // Alertas de presupuesto (solo si hay presupuesto definido)
+        if (this.presupuesto > 0 && pct !== undefined) {
+            if (balance < 0) {
+                UIManager.notificar("⛔ ¡Superaste el presupuesto!", "error");
+            } else if (pct >= 90) {
+                UIManager.notificar("🔴 Atención: usaste más del 90% del presupuesto", "error");
+            } else if (pct >= 70 && pct < 90) {
+                UIManager.notificar("🟡 Vas por el 70% del presupuesto", "info");
+            }
+        }
     }
 };
 
