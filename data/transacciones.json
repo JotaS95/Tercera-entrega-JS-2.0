@@ -1,0 +1,8 @@
+[
+  { "id": 1, "nombre": "Alquiler", "tipo": "gasto" },
+  { "id": 2, "nombre": "Sueldo", "tipo": "ingreso" },
+  { "id": 3, "nombre": "Comida", "tipo": "gasto" },
+  { "id": 4, "nombre": "Transporte", "tipo": "gasto" },
+  { "id": 5, "nombre": "Servicios", "tipo": "gasto" },
+  { "id": 6, "nombre": "Venta", "tipo": "ingreso" }
+]

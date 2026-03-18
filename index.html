@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billetera Virtual - Proyecto Final Silva</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Estilos Propios -->
+    <link rel="stylesheet" href="css/estilos.css">
+    
+    <!-- Librerías Externas (Se cargan primero) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- Scripts propios (Sin Módulos - Cargados Secuencialmente) -->
+    <script defer src="js/storage.js"></script>
+    <script defer src="js/ui.js"></script>
+    <script defer src="js/main.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Mis Finanzas</h1>
+            <div class="balance-card">
+                <div class="balance-item">
+                    <span class="label">Presupuesto Inicial</span>
+                    <span id="presupuesto-valor" class="valor">$0.00</span>
+                </div>
+                <div class="balance-item main">
+                    <span class="label">Balance Actual</span>
+                    <span id="balance-valor" class="valor">$0.00</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Configuración inicial -->
+            <section class="config-section card">
+                <h3>Configuración</h3>
+                <div class="input-group">
+                    <input type="number" id="input-presupuesto" placeholder="Ingresa tu presupuesto total">
+                    <button id="btn-guardar-presupuesto">Actualizar</button>
+                </div>
+                <button id="btn-reiniciar-todo" class="btn-danger">Borrar Todos los Datos</button>
+            </section>
+
+            <!-- Formulario de Transacción -->
+            <section class="form-section card">
+                <h3>Nueva Transacción</h3>
+                <form id="formulario-gastos">
+                    <div class="input-group">
+                        <input type="text" id="input-descripcion" placeholder="Descripción (ej. Supermercado)" required>
+                    </div>
+                    <div class="input-group-row">
+                        <input type="number" id="input-monto" placeholder="Monto ($)" required>
+                        <select id="select-tipo">
+                            <option value="gasto">Gasto</option>
+                            <option value="ingreso">Ingreso</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Registrar Movimiento</button>
+                </form>
+            </section>
+
+            <!-- Historial de Movimientos -->
+            <section class="list-section">
+                <h3>Historial de Movimientos</h3>
+                <div id="contenedor-transacciones" class="history-container">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
