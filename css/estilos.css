@@ -487,7 +487,7 @@ input:focus, select:focus {
 
 .mes-header .toggle-icon {
     font-size: 0.7rem;
-    transition: transform 0.2s;
+    transition: transform 0.25s ease;
 }
 
 .mes-header.cerrado + .mes-contenido {
@@ -522,6 +522,13 @@ input:focus, select:focus {
     cursor: pointer; font-size: 0.9rem; padding: 5px 8px; transition: all 0.2s;
 }
 .btn-del:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+
+.mov-acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
 
 .empty-state { text-align: center; padding: 36px 20px; color: var(--text-muted); }
 .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }

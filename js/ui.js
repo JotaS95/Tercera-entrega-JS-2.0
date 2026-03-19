@@ -174,10 +174,16 @@ const UIManager = {
             const mesContenido = document.createElement("div");
             mesContenido.className = "mes-contenido";
 
+            // Rotar ícono si el mes está cerrado desde el inicio
+            if (index !== 0) {
+                mesHeader.querySelector(".toggle-icon").style.transform = "rotate(-90deg)";
+            }
+
             mesHeader.onclick = () => {
                 const isCerrado = mesHeader.classList.contains("cerrado");
                 mesHeader.classList.toggle("cerrado", !isCerrado);
                 mesHeader.classList.toggle("abierto", isCerrado);
+                mesHeader.querySelector(".toggle-icon").style.transform = isCerrado ? "rotate(0deg)" : "rotate(-90deg)";
             };
 
             // Días dentro del Mes
@@ -193,13 +199,15 @@ const UIManager = {
                 // Movimientos
                 grupoDia.items.forEach(t => {
                     const item = document.createElement("div");
-                    item.className = `history-item ${t.tipo}`;
+                    item.className = `mov-card ${t.tipo}`;
 
                     const signo = t.tipo === "gasto" ? "-" : "+";
+                    const icono = t.tipo === "gasto" ? "📉" : "📈";
 
                     item.innerHTML = `
+                        <div class="mov-icon">${icono}</div>
                         <div class="mov-info">
-                            <span class="mov-desc">${t.descripcion}</span>
+                            <span class="mov-descripcion">${t.descripcion}</span>
                             <div class="mov-meta">
                                 <span class="mov-tipo">${t.tipo}</span>
                                 <span class="mov-hora">🕐 ${this.formatearHora(t.id)}</span>
