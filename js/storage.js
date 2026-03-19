@@ -1,6 +1,6 @@
 /**
- * storage.js - Manejo persistente de datos (multi-usuario)
- */
+ *   Manejo de datos (multi-usuario)
+ **/
 
 const StorageManager = {
     USUARIOS_KEY: "billetera_usuarios_lista",

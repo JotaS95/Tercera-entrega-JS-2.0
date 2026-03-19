@@ -1,7 +1,3 @@
-/**
- * main.js - Lógica principal y orquestación
- */
-
 const App = {
     usuario: null,
     transacciones: [],
@@ -105,18 +101,12 @@ const App = {
     // Normalizar montos: acepta 1500 | 1500.50 | 1500,50
     parsearMonto(valor) {
         let raw = String(valor).trim();
-        // Reemplazamos coma por punto para que JS lo entienda como decimal
         raw = raw.replace(",", ".");
-        
-        // Si el usuario puso un punto y le siguen exactamente 3 ceros (ej: 1.000)
-        // en Argentina suele ser "mil", pero en JS es "uno".
-        // Vamos a ser proactivos: si sospechamos que quiso poner miles con punto,
-        // lo corregimos, pero el hint ya les avisa que no lo hagan.
+
         if (/^\d+\.\d{3}$/.test(raw)) {
-            // Es muy probable que sea un punto de miles (ej: 1.000 o 10.000)
             raw = raw.replace(".", "");
         }
-        
+
         return parseFloat(raw);
     },
 
@@ -152,7 +142,7 @@ const App = {
             let mensaje = "";
             let confirmacionRequerida = true;
 
-            switch(opcion) {
+            switch (opcion) {
                 case "historial":
                     this.transacciones = [];
                     mensaje = "Historial borrado";
@@ -217,7 +207,7 @@ const App = {
 
         const pct = UIManager.actualizarProgreso(this.presupuesto, totalGastos);
 
-        // Alertas de presupuesto (solo si hay presupuesto definido)
+        // Alertas de presupuesto solo si hay presupuesto definido
         if (this.presupuesto > 0 && pct !== undefined) {
             if (balance < 0) {
                 UIManager.notificar("⛔ ¡Superaste el presupuesto!", "error");
