@@ -7,7 +7,7 @@
     --danger: #ef233c;
     --danger-light: #fdecea;
     --bg: #f5f6fa;
-    --surface: rgba(255, 255, 255, 0.9); /* M├ís glassmorphism */
+    --surface: rgba(255, 255, 255, 0.9); 
     --surface-2: rgba(248, 249, 253, 0.5);
     --border: rgba(232, 234, 240, 0.7);
     --text: #1a1d2e;
@@ -15,10 +15,10 @@
     --shadow-sm: 0 4px 12px rgba(67,97,238,0.06);
     --shadow: 0 10px 30px rgba(67,97,238,0.12);
     --warning: #d29922;
-    --radius: 18px; /* Bordes m├ís redondeados para look moderno */
+    --radius: 18px; 
 }
 
-/* GRADIENTE PROFESIONAL (MESH) */
+/* GRADIENTE */
 .mesh-bg {
     background-color: #f5f6fa;
     background-image: 
@@ -39,7 +39,7 @@ body {
     min-height: 100vh;
 }
 
-/* ===== PANTALLA DE LOGIN ===== */
+/*  PANTALLA DE LOGIN  */
 #login-screen {
     position: fixed;
     inset: 0;
@@ -173,10 +173,10 @@ body {
 }
 .chip-del:hover { background: var(--danger); color: white; opacity: 1; }
 
-/* ===== APP PRINCIPAL ===== */
+/* PRINCIPAL  */
 #app-screen { display: none; min-height: 100vh; }
 
-/* ===== NAVBAR ===== */
+/*  NAVBAR  */
 .navbar {
     position: sticky;
     top: 0;
@@ -231,14 +231,13 @@ body {
 }
 .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
-/* ===== LAYOUT DE 2 COLUMNAS ===== */
 .app-container {
     display: flex;
     min-height: calc(100vh - 65px);
-    background: transparent; /* Ver el fondo mesh */
+    background: transparent; 
 }
 
-/* ===== SIDEBAR IZQUIERDO: HISTORIAL ===== */
+/*  HISTORIAL  */
 .sidebar-historial {
     width: 320px;
     background: rgba(255, 255, 255, 0.4);
@@ -266,14 +265,14 @@ body {
     padding: 16px;
 }
 
-/* ===== CONTENIDO PRINCIPAL ===== */
+/* CONTENIDO PRINCIPAL  */
 .main-content {
     flex: 1;
     padding: 28px 40px 60px;
     overflow-y: auto;
 }
 
-/* ===== STATS ===== */
+/* ESTADÍSTICAS  */
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -316,7 +315,7 @@ body {
 .valor-positivo { color: var(--success); }
 .valor-negativo { color: var(--danger); }
 
-/* ===== CARDS ===== */
+/*  TARJETAS  */
 .card {
     background: var(--surface);
     backdrop-filter: blur(8px);
@@ -338,7 +337,7 @@ body {
     border-bottom: 1px solid var(--border);
 }
 
-/* ===== INPUTS ===== */
+/*  INPUTS  */
 input, select {
     background: var(--surface-2);
     border: 1.5px solid var(--border);
@@ -354,7 +353,7 @@ input:focus, select:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(67,97,238,0.1);
-    background: #ffffff; /* S├│lido al escribir */
+    background: #ffffff; 
 }
 
 .input-hint {
@@ -369,7 +368,7 @@ input:focus, select:focus {
 .form-row-2 { grid-template-columns: 2fr 1fr; }
 .form-row-presupuesto { display: flex; gap: 10px; margin-bottom: 10px; }
 
-/* ===== BOTONES ===== */
+/*  BOTONES  */
 .btn-primary {
     background: var(--primary);
     border: none;
@@ -414,7 +413,7 @@ input:focus, select:focus {
 }
 .btn-danger-outline:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
 
-/* ===== HISTORIAL ===== */
+/*  HISTORIAL  */
 .history-list { display: flex; flex-direction: column; gap: 10px; }
 
 .mov-card {
@@ -451,7 +450,7 @@ input:focus, select:focus {
 .mov-tipo { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 .mov-hora { font-size: 0.72rem; color: var(--text-muted); }
 
-/* ===== GRUPOS POR MES (CARPETAS) ===== */
+/*  CARPETAS POR MES  */
 .mes-grupo {
     margin-bottom: 16px;
 }
@@ -494,7 +493,7 @@ input:focus, select:focus {
     display: none;
 }
 
-/* ===== ENCABEZADOS DE D├ìA ===== */
+/*  ENCABEZADOS DE DÍA  */
 .dia-header {
     padding: 6px 0 6px;
     margin-top: 14px;
@@ -526,7 +525,7 @@ input:focus, select:focus {
 .empty-state { text-align: center; padding: 36px 20px; color: var(--text-muted); }
 .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
 
-/* ===== BARRA DE PROGRESO DE PRESUPUESTO ===== */
+/*  BARRA DE PROGRESO DE PRESUPUESTO  */
 .progreso-header {
     display: flex;
     justify-content: space-between;
@@ -566,13 +565,12 @@ input:focus, select:focus {
 
 .empty-state p { font-size: 0.9rem; }
 
-/* ===== ANIMACI├ôN ===== */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== RESPONSIVE ===== */
+/*  RESPONSIVE  */
 @media (max-width: 900px) {
     .app-container { flex-direction: column-reverse; }
     .sidebar-historial { 

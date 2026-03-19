@@ -1,9 +1,5 @@
-/**
- * storage.js - Manejo persistente de datos
- */
-
 const StorageManager = {
-    // Claves para LocalStorage
+    //LocalStorage
     KEYS: {
         TRANSACCIONES: "presuFinal_transacciones",
         PRESUPUESTO: "presuFinal_presupuesto"

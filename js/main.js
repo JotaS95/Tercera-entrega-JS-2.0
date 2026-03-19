@@ -1,8 +1,4 @@
-/**
- * main.js - Lógica principal y orquestación
- */
 
-// Estado global de la aplicación
 const App = {
     transacciones: [],
     presupuesto: 0,
@@ -11,15 +7,15 @@ const App = {
     // Inicializar la aplicación
     async iniciar() {
         console.log("Iniciando Billetera Virtual...");
-        
-        // Cargar datos asíncronos (Fetch con Try-Catch)
+
+        // Cargar datos asíncronos
         await this.cargarCategorias();
 
         // Cargar datos de Storage
         this.transacciones = StorageManager.obtenerTransacciones();
         this.presupuesto = StorageManager.obtenerPresupuesto();
 
-        // Configurar Event Listeners
+        // Event Listeners
         this.configurarEventos();
 
         // Renderizar estado inicial
@@ -31,19 +27,17 @@ const App = {
         try {
             const respuesta = await fetch("data/transacciones.json");
             if (!respuesta.ok) throw new Error("No se pudo cargar el archivo de datos");
-            
+
             this.categoriasCargadas = await respuesta.json();
             console.log("Categorías cargadas:", this.categoriasCargadas);
         } catch (error) {
             console.error("Error al cargar categorías:", error);
             UIManager.notificar("Error al conectar con el servidor de datos", "error");
         } finally {
-            // Esto siempre se ejecuta, podrías ocultar un loader aquí
             console.log("Carga de datos finalizada.");
         }
     },
 
-    // Configurar escuchadores de eventos
     configurarEventos() {
         // Formulario de gastos
         const form = document.getElementById("formulario-gastos");
@@ -58,7 +52,7 @@ const App = {
         btnReset.onclick = () => this.reiniciarAplicacion();
     },
 
-    // Lógica para agregar transacción
+    // transacción
     procesarNuevaTransaccion(e) {
         e.preventDefault();
 
@@ -66,7 +60,7 @@ const App = {
         const inputMonto = document.getElementById("input-monto");
         const selectTipo = document.getElementById("select-tipo");
 
-        // VALIDACIÓN (Sugerencia del tutor: .trim() y no-cero)
+        // VALIDACIÓN
         const descripcion = inputDesc.value.trim();
         const monto = parseFloat(inputMonto.value);
 
@@ -95,11 +89,11 @@ const App = {
         // Limpiar form y notificar
         e.target.reset();
         UIManager.notificar("Movimiento registrado con éxito");
-        
+
         this.actualizarUI();
     },
 
-    // Lógica para cambiar presupuesto
+    // cambiar presupuesto
     cambiarPresupuesto() {
         const input = document.getElementById("input-presupuesto");
         const valor = parseFloat(input.value);
@@ -115,7 +109,7 @@ const App = {
         }
     },
 
-    // Lógica para eliminar una transacción
+    // eliminar una transacción
     eliminarTransaccion(id) {
         UIManager.confirmarAccion(
             "¿Estás seguro?",
@@ -129,7 +123,7 @@ const App = {
         );
     },
 
-    // Lógica para reiniciar
+    // reiniciar
     reiniciarAplicacion() {
         UIManager.confirmarAccion(
             "¿Reiniciar todo?",
@@ -144,7 +138,6 @@ const App = {
         );
     },
 
-    // El "motor" de renderizado
     actualizarUI() {
         // Calcular balance actual
         const totalMovimientos = this.transacciones.reduce((acc, t) => {
@@ -161,7 +154,7 @@ const App = {
     }
 };
 
-// Arrancar cuando el DOM esté listo
+// Arrancar 
 document.addEventListener("DOMContentLoaded", () => {
     App.iniciar();
 });

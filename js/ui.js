@@ -1,9 +1,5 @@
-/**
- * ui.js - Manipulación del DOM y Renderizado
- */
-
 const UIManager = {
-    // Elementos del DOM
+    // Elementos
     selectores: {
         contenedor: "contenedor-transacciones",
         presupuesto: "presupuesto-valor",
@@ -23,7 +19,7 @@ const UIManager = {
     actualizarCabecera(presupuesto, balance) {
         const elPresu = document.getElementById(this.selectores.presupuesto);
         const elBalance = document.getElementById(this.selectores.balance);
-        
+
         if (elPresu) elPresu.innerText = this.formatearMoneda(presupuesto);
         if (elBalance) {
             elBalance.innerText = this.formatearMoneda(balance);
@@ -46,8 +42,8 @@ const UIManager = {
 
         transacciones.forEach(t => {
             const div = document.createElement("div");
-            div.className = `mov-card ${t.tipo}`; // "ingreso" o "gasto"
-            
+            div.className = `mov-card ${t.tipo}`;
+
             const montoFormateado = this.formatearMoneda(t.monto);
             const signo = t.tipo === "gasto" ? "-" : "+";
             const icono = t.tipo === "gasto" ? "💸" : "💰";
@@ -66,12 +62,12 @@ const UIManager = {
 
             contenedor.appendChild(div);
 
-            // Evento para borrar (usando delegation u objeto directo)
+            // Evento para borrar
             div.querySelector(".btn-del").onclick = () => onEliminar(t.id);
         });
     },
 
-    // Mostrar notificaciones con Toastify
+    // notificaciones con Toastify
     notificar(mensaje, tipo = "success") {
         Toastify({
             text: mensaje,
