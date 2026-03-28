@@ -123,8 +123,8 @@ const App = {
             document.getElementById("input-new-password").focus();
             return;
         }
-        if (password.length < 4) {
-            UIManager.notificar("El PIN debe tener al menos 4 dígitos", "error");
+        if (password.length !== 6) {
+            UIManager.notificar("El PIN debe tener exactamente 6 dígitos", "error");
             return;
         }
         if (!/^[0-9]+$/.test(password)) {
