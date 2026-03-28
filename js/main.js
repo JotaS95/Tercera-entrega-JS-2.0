@@ -210,10 +210,10 @@ const App = {
     },
 
     actualizarUI() {
-        const { balance, totalGastos } = UIManager.actualizarStats(this.presupuesto, this.transacciones);
+        const { balance, totalGastos, totalIngresos } = UIManager.actualizarStats(this.presupuesto, this.transacciones);
         UIManager.renderizarLista(this.transacciones, (id) => this.eliminarTransaccion(id));
 
-        const pct = UIManager.actualizarProgreso(this.presupuesto, totalGastos);
+        const pct = UIManager.actualizarProgreso(this.presupuesto, totalGastos, totalIngresos);
 
         // Alertas de presupuesto solo si hay presupuesto definido
         if (this.presupuesto > 0 && pct !== undefined) {

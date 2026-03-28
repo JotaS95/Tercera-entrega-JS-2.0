@@ -88,14 +88,15 @@ const UIManager = {
     },
 
     // Actualizar la barra de progreso del presupuesto
-    actualizarProgreso(presupuesto, totalGastos) {
+    actualizarProgreso(presupuesto, totalGastos, totalIngresos = 0) {
         const card = document.getElementById("card-progreso");
         if (presupuesto <= 0) { card.style.display = "none"; return; }
 
         card.style.display = "block";
 
-        const porcentajeUsado = Math.min((totalGastos / presupuesto) * 100, 100);
-        const restante = presupuesto - totalGastos;
+        const totalDisponible = presupuesto + totalIngresos;
+        const porcentajeUsado = Math.min((totalGastos / totalDisponible) * 100, 100);
+        const restante = totalDisponible - totalGastos;
 
         // Color de la barra según uso
         let colorBarra = "#06c270"; // verde
@@ -107,13 +108,13 @@ const UIManager = {
         barra.style.background = colorBarra;
 
         document.getElementById("progreso-pct").innerText = `${Math.round(porcentajeUsado)}% usado`;
-        document.getElementById("progreso-total").innerText = `de ${this.formatearMoneda(presupuesto)}`;
+        document.getElementById("progreso-total").innerText = `de ${this.formatearMoneda(totalDisponible)}`;
         document.getElementById("progreso-restante-label").innerText =
             restante >= 0
                 ? `${this.formatearMoneda(restante)} disponibles`
                 : `${this.formatearMoneda(Math.abs(restante))} sobre el presupuesto`;
         document.getElementById("progreso-restante-label").style.color =
-            restante < 0 ? "var(--danger)" : restante < presupuesto * 0.1 ? "var(--warning)" : "var(--success)";
+            restante < 0 ? "var(--danger)" : restante < totalDisponible * 0.1 ? "var(--warning)" : "var(--success)";
 
         return porcentajeUsado;
     },
