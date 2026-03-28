@@ -2,157 +2,154 @@ const App = {
     usuario: null,
     transacciones: [],
     presupuesto: 0,
+    _usuarioLoginActual: null,
 
     async iniciar() {
-        const usuarios = StorageManager.obtenerUsuarios();
-        UIManager.renderizarUsuarios(usuarios,
-            (u) => this.seleccionarUsuarioDesdeChip(u),
-            (u) => this.confirmarEliminarUsuario(u)
-        );
+        this._renderizarChips();
 
-        // Al escribir el nombre, detecto si es usuario nuevo o existente
-        document.getElementById("input-login-usuario").addEventListener("input", () => this.actualizarFormLogin());
-        document.getElementById("input-login-usuario").onkeydown = (e) => {
-            if (e.key === "Enter") this.login();
-        };
-        document.getElementById("input-password").onkeydown = (e) => {
-            if (e.key === "Enter") this.login();
-        };
-        document.getElementById("input-confirm-password").onkeydown = (e) => {
-            if (e.key === "Enter") this.login();
-        };
+        // Navegación entre vistas
+        document.getElementById("btn-ir-registro").onclick    = () => this.mostrarVistaRegistro();
+        document.getElementById("btn-volver-login").onclick   = () => this.mostrarVistaInicial();
+        document.getElementById("btn-volver-registro").onclick= () => this.mostrarVistaInicial();
+        document.getElementById("btn-ingresar").onclick       = () => this.login();
+        document.getElementById("btn-crear-cuenta").onclick   = () => this.crearCuenta();
 
-        // Forzar solo números en tiempo real
-        ['input-password', 'input-confirm-password'].forEach(id => {
-            document.getElementById(id).addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+        // Enter en campos
+        document.getElementById("input-password").onkeydown       = (e) => { if (e.key === "Enter") this.login(); };
+        document.getElementById("input-login-usuario").onkeydown  = (e) => { if (e.key === "Enter") document.getElementById("input-new-password").focus(); };
+        document.getElementById("input-new-password").onkeydown   = (e) => { if (e.key === "Enter") document.getElementById("input-confirm-password").focus(); };
+        document.getElementById("input-confirm-password").onkeydown = (e) => { if (e.key === "Enter") this.crearCuenta(); };
+
+        // Solo números en PIN
+        ["input-password", "input-new-password", "input-confirm-password"].forEach(id => {
+            document.getElementById(id).addEventListener("input", (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
             });
         });
 
-        // Botón mostrar/ocultar contraseña
-        document.getElementById("btn-toggle-pass").onclick = () => {
-            const inp = document.getElementById("input-password");
-            inp.type = inp.type === "password" ? "text" : "password";
+        // Toggle mostrar/ocultar PIN
+        const toggles = {
+            "btn-toggle-pass":         "input-password",
+            "btn-toggle-new-pass":     "input-new-password",
+            "btn-toggle-confirm-pass": "input-confirm-password",
         };
-        document.getElementById("btn-toggle-confirm-pass").onclick = () => {
-            const inp = document.getElementById("input-confirm-password");
-            inp.type = inp.type === "password" ? "text" : "password";
-        };
-
-        document.getElementById("btn-ingresar").onclick = () => this.login();
+        Object.entries(toggles).forEach(([btnId, inpId]) => {
+            document.getElementById(btnId).onclick = () => {
+                const inp = document.getElementById(inpId);
+                inp.type = inp.type === "password" ? "text" : "password";
+            };
+        });
     },
 
-    // Detecta si el usuario existe y ajusta el formulario
-    actualizarFormLogin() {
-        const nombre = document.getElementById("input-login-usuario").value.trim();
-        const usuarios = StorageManager.obtenerUsuarios();
-        const existe = usuarios.includes(nombre);
+    // ─── VISTAS ───────────────────────────────────────────────
 
-        const grupoPass = document.getElementById("grupo-password");
-        const grupoConfirm = document.getElementById("grupo-confirm-password");
-        const hint = document.getElementById("login-hint");
-        const labelPass = document.getElementById("label-password");
-        const btnIngresar = document.getElementById("btn-ingresar");
-
-        // Limpiar campos al cambiar de usuario
-        document.getElementById("input-password").value = "";
+    mostrarVistaInicial() {
+        document.getElementById("vista-inicial").style.display  = "block";
+        document.getElementById("vista-login").style.display    = "none";
+        document.getElementById("vista-registro").style.display = "none";
+        // Limpiar campos
+        document.getElementById("input-password").value         = "";
+        document.getElementById("input-new-password").value     = "";
         document.getElementById("input-confirm-password").value = "";
-
-        if (nombre === "") {
-            grupoPass.style.display = "none";
-            grupoConfirm.style.display = "none";
-            hint.style.display = "none";
-            btnIngresar.textContent = "Ingresar →";
-            return;
-        }
-
-        if (existe) {
-            // Usuario existente → solo pedir contraseña
-            grupoPass.style.display = "block";
-            grupoConfirm.style.display = "none";
-            labelPass.textContent = "Contraseña";
-            hint.style.display = "block";
-            hint.className = "login-hint hint-info";
-            hint.textContent = "👤 Usuario existente. Ingresá tu contraseña.";
-            btnIngresar.textContent = "Iniciar sesión →";
-        } else {
-            // Usuario nuevo → pedir contraseña y confirmación
-            grupoPass.style.display = "block";
-            grupoConfirm.style.display = "block";
-            labelPass.textContent = "Crear contraseña";
-            hint.style.display = "block";
-            hint.className = "login-hint hint-new";
-            hint.textContent = "✨ Usuario nuevo. Elegí una contraseña para tu cuenta.";
-            btnIngresar.textContent = "Crear cuenta →";
-        }
+        document.getElementById("input-login-usuario").value    = "";
+        this._usuarioLoginActual = null;
+        this._renderizarChips();
     },
+
+    mostrarVistaLogin(nombre) {
+        this._usuarioLoginActual = nombre;
+        document.getElementById("vista-inicial").style.display  = "none";
+        document.getElementById("vista-login").style.display    = "block";
+        document.getElementById("vista-registro").style.display = "none";
+        document.getElementById("login-nombre-titulo").textContent = nombre;
+        document.getElementById("input-password").value = "";
+        document.getElementById("input-password").focus();
+    },
+
+    mostrarVistaRegistro() {
+        document.getElementById("vista-inicial").style.display  = "none";
+        document.getElementById("vista-login").style.display    = "none";
+        document.getElementById("vista-registro").style.display = "block";
+        document.getElementById("input-login-usuario").value    = "";
+        document.getElementById("input-new-password").value     = "";
+        document.getElementById("input-confirm-password").value = "";
+        document.getElementById("input-login-usuario").focus();
+    },
+
+    // ─── ACCIONES ─────────────────────────────────────────────
 
     async login() {
-        const nombre = document.getElementById("input-login-usuario").value.trim();
+        const nombre   = this._usuarioLoginActual;
         const password = document.getElementById("input-password").value;
-        const confirmPassword = document.getElementById("input-confirm-password").value;
+
+        if (!nombre) return;
+
+        if (password === "") {
+            UIManager.notificar("Ingresá tu PIN para continuar", "error");
+            document.getElementById("input-password").focus();
+            return;
+        }
+
+        const ok = await StorageManager.verificarPassword(nombre, password);
+        if (!ok) {
+            UIManager.notificar("❌ PIN incorrecto", "error");
+            document.getElementById("input-password").value = "";
+            document.getElementById("input-password").focus();
+            return;
+        }
+        this.seleccionarUsuario(nombre);
+    },
+
+    async crearCuenta() {
+        const nombre   = document.getElementById("input-login-usuario").value.trim();
+        const password = document.getElementById("input-new-password").value;
+        const confirm  = document.getElementById("input-confirm-password").value;
 
         if (nombre === "") {
-            UIManager.notificar("Ingresá tu nombre para continuar", "error");
+            UIManager.notificar("Ingresá un nombre de usuario", "error");
+            document.getElementById("input-login-usuario").focus();
             return;
         }
 
         const usuarios = StorageManager.obtenerUsuarios();
-        const existe = usuarios.includes(nombre);
-
-        if (existe) {
-            // Login de usuario existente
-            if (password === "") {
-                UIManager.notificar("Ingresá tu contraseña", "error");
-                document.getElementById("input-password").focus();
-                return;
-            }
-            const ok = await StorageManager.verificarPassword(nombre, password);
-            if (!ok) {
-                UIManager.notificar("❌ Contraseña incorrecta", "error");
-                document.getElementById("input-password").value = "";
-                document.getElementById("input-password").focus();
-                return;
-            }
-            this.seleccionarUsuario(nombre);
-        } else {
-            // Registro de usuario nuevo
-            if (password === "") {
-                UIManager.notificar("Elegí una contraseña para tu cuenta", "error");
-                document.getElementById("input-password").focus();
-                return;
-            }
-            if (password.length < 4) {
-                UIManager.notificar("El PIN debe tener entre 4 y 6 dígitos numéricos", "error");
-                return;
-            }
-            if (!/^[0-9]+$/.test(password)) {
-                UIManager.notificar("Solo se permiten números en la contraseña", "error");
-                return;
-            }
-            if (password !== confirmPassword) {
-                UIManager.notificar("Las contraseñas no coinciden", "error");
-                document.getElementById("input-confirm-password").value = "";
-                document.getElementById("input-confirm-password").focus();
-                return;
-            }
-            await StorageManager.guardarPassword(nombre, password);
-            UIManager.notificar("✅ Cuenta creada exitosamente", "success");
-            this.seleccionarUsuario(nombre);
+        if (usuarios.includes(nombre)) {
+            UIManager.notificar("Ese nombre ya existe. Elegí otro.", "error");
+            document.getElementById("input-login-usuario").focus();
+            return;
         }
+
+        if (password === "") {
+            UIManager.notificar("Elegí un PIN de 4 a 6 dígitos", "error");
+            document.getElementById("input-new-password").focus();
+            return;
+        }
+        if (password.length < 4) {
+            UIManager.notificar("El PIN debe tener al menos 4 dígitos", "error");
+            return;
+        }
+        if (!/^[0-9]+$/.test(password)) {
+            UIManager.notificar("Solo se permiten números en el PIN", "error");
+            return;
+        }
+        if (password !== confirm) {
+            UIManager.notificar("Los PIN no coinciden", "error");
+            document.getElementById("input-confirm-password").value = "";
+            document.getElementById("input-confirm-password").focus();
+            return;
+        }
+
+        await StorageManager.guardarPassword(nombre, password);
+        UIManager.notificar("✅ Cuenta creada exitosamente", "success");
+        this.seleccionarUsuario(nombre);
     },
 
-    // Login desde chip (pide contraseña si tiene)
-    async seleccionarUsuarioDesdeChip(nombre) {
+    // Login desde chip
+    seleccionarUsuarioDesdeChip(nombre) {
         if (!StorageManager.tienePassword(nombre)) {
-            // Usuario legacy sin contraseña → acceso directo
             this.seleccionarUsuario(nombre);
             return;
         }
-        // Pre-cargar nombre y mostrar el formulario de contraseña
-        document.getElementById("input-login-usuario").value = nombre;
-        this.actualizarFormLogin();
-        document.getElementById("input-password").focus();
+        this.mostrarVistaLogin(nombre);
     },
 
     seleccionarUsuario(nombre) {
@@ -161,7 +158,20 @@ const App = {
         this.cargarDatosUsuario();
     },
 
+    _renderizarChips() {
+        const usuarios = StorageManager.obtenerUsuarios();
+        UIManager.renderizarUsuarios(
+            usuarios,
+            (u) => this.seleccionarUsuarioDesdeChip(u),
+            (u) => this.confirmarEliminarUsuario(u)
+        );
+        // Mostrar divisor "o" solo si hay chips
+        const divisor = document.getElementById("login-divisor");
+        if (divisor) divisor.style.display = usuarios.length > 0 ? "flex" : "none";
+    },
+
     async cargarDatosUsuario() {
+
         await this.cargarCategorias();
 
         this.transacciones = StorageManager.obtenerTransacciones(this.usuario);
@@ -313,12 +323,8 @@ const App = {
             () => {
                 StorageManager.eliminarUsuario(nombre);
                 UIManager.notificar(`Usuario "${nombre}" eliminado`, "error");
-                // Refrescar los chips
-                const usuarios = StorageManager.obtenerUsuarios();
-                UIManager.renderizarUsuarios(usuarios,
-                    (u) => this.seleccionarUsuarioDesdeChip(u),
-                    (u) => this.confirmarEliminarUsuario(u)
-                );
+                this._renderizarChips();
+                this.mostrarVistaInicial();
             }
         );
     },
@@ -327,20 +333,8 @@ const App = {
         this.usuario = null;
         this.transacciones = [];
         this.presupuesto = 0;
-        // Resetear campos del formulario de login
-        document.getElementById("input-login-usuario").value = "";
-        document.getElementById("input-password").value = "";
-        document.getElementById("input-confirm-password").value = "";
-        document.getElementById("grupo-password").style.display = "none";
-        document.getElementById("grupo-confirm-password").style.display = "none";
-        document.getElementById("login-hint").style.display = "none";
-        document.getElementById("btn-ingresar").textContent = "Ingresar →";
-        const usuarios = StorageManager.obtenerUsuarios();
-        UIManager.renderizarUsuarios(usuarios,
-            (u) => this.seleccionarUsuarioDesdeChip(u),
-            (u) => this.confirmarEliminarUsuario(u)
-        );
         UIManager.mostrarLogin();
+        this.mostrarVistaInicial();
     },
 
     actualizarUI() {
