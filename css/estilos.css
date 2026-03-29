@@ -751,18 +751,20 @@ body.has-custom-bg .sidebar-historial {
 
 body.has-custom-bg .card, 
 body.has-custom-bg .stat-card {
-    background: var(--dynamic-surface);
-    backdrop-filter: blur(10px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    transition: backdrop-filter 0.4s ease, background 0.4s ease, transform 0.3s ease;
+    background: rgba(255, 255, 255, 0.05); /* Casi invisible por defecto */
+    backdrop-filter: blur(0px) saturate(100%); /* Sin desenfoque para ver la foto nitida */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    transition: all 0.4s ease;
 }
 
-/* EFECTO LIMPIEZA DE CRISTAL AL PASAR EL MOUSE */
+/* EFECTO DE ENFOQUE AL PASAR EL MOUSE (MÁS OPACO) */
 body.has-custom-bg .card:hover, 
 body.has-custom-bg .stat-card:hover {
-    backdrop-filter: blur(0px) saturate(100%);
-    background: rgba(255, 255, 255, 0.05); /* Casi invisible al hover para ver la foto */
+    background: var(--dynamic-surface); /* Se vuelve "cristal" al tocarlo */
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 }
 
