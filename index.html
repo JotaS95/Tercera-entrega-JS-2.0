@@ -13,9 +13,10 @@
     <!-- Estilos Propios -->
     <link rel="stylesheet" href="css/estilos.css">
 
-    <!-- SWEETALERT2 Y TOASTIFY -->
+    <!-- SWEETALERT2, TOASTIFY Y SHEETJS (EXCEL) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <!-- Scripts propios -->
     <script defer src="js/storage.js"></script>
@@ -26,7 +27,53 @@
 
     <!-- PANTALLA DE LOGIN -->
     <div id="login-screen">
-        <div class="login-box">
+        
+        <!-- Panel de Presentación Izquierdo -->
+        <div class="login-presentation">
+            
+            <div class="presentation-advice">
+                <div class="advice-icon">💡</div>
+                <div class="advice-content">
+                    <strong>CONSEJO:</strong>
+                    ¿Quieres tener el control real de tu plata? Usa esta billetera para registrar lo que gastas día a día, y descubre en qué se te va el sueldo. ¡Es el primer paso hacia la tranquilidad financiera!
+                </div>
+            </div>
+
+            <h1 class="presentation-title">Tus finanzas,<br>bajo control.</h1>
+            <p class="presentation-subtitle">Tu Billetera Virtual rápida, privada y estéticamente moderna.</p>
+            
+            <div class="presentation-features">
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <div>
+                        <strong>100% Segura</strong>
+                        <p>Encriptación local y personal multiplataforma.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div>
+                        <strong>Monitoreo Preciso</strong>
+                        <p>Analizá tus ingresos, gastos y presupuesto al instante.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎨</div>
+                    <div>
+                        <strong>Altamente Personalizable</strong>
+                        <p>Adaptá la interfaz con diseño Glassmorphism único.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="presentation-footer">
+                <img src="img/zaviso-brand-mark.jpg" alt="Zaviso" class="footer-logo" onerror="this.outerHTML='<div class=\'footer-logo-fallback\'>Z</div>'">
+                <span>Desarrollado por <strong>Zaviso</strong></span>
+            </div>
+        </div>
+
+        <div class="login-box-wrapper">
+            <div class="login-box">
 
             <!-- ===== VISTA INICIAL ===== -->
             <div id="vista-inicial">
@@ -97,6 +144,7 @@
             </div>
 
         </div>
+        </div>
     </div>
 
 
@@ -108,8 +156,6 @@
             <div class="navbar-user">
                 <div class="avatar" id="avatar-inicial">?</div>
                 <span id="navbar-nombre">Usuario</span>
-                <!-- Input oculto para subir imagen de fondo -->
-                <input type="file" id="input-fondo" accept="image/*" style="display:none;">
                 <button class="btn-fondo" id="btn-cambiar-fondo" title="Cambiar fondo de pantalla">🖼️ Fondo</button>
                 <button class="btn-logout" id="btn-cerrar-sesion">Salir</button>
             </div>
@@ -119,7 +165,15 @@
             <!-- Historial -->
             <aside class="sidebar-historial">
                 <div class="sidebar-header">
-                    <p class="card-title" style="margin:0; border:none; padding:0;">📋 Historial</p>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                        <p class="card-title" style="margin:0; border:none; padding:0;">📋 Historial</p>
+                        <button class="btn-export-all" id="btn-exportar-todo" title="Exportar TODO a Excel">
+                            <svg class="excel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 3.5 18.5 8H14V3.5zM12 11h2v2h-2v2h-2v-2H8v-2h2v-2h2v2z"/>
+                            </svg>
+                            <span>Exportar Todo</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="history-list" id="contenedor-transacciones">
                 </div>

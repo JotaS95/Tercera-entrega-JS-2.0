@@ -215,23 +215,62 @@ const App = {
         document.getElementById("btn-cerrar-sesion").onclick = () => this.cerrarSesion();
         document.getElementById("btn-reiniciar-todo").onclick = () => this.solicitarLimpieza();
 
-        // Fondo de pantalla
-        const inputFondo = document.getElementById("input-fondo");
-        document.getElementById("btn-cambiar-fondo").onclick = () => inputFondo.click();
-
-        inputFondo.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const base64 = event.target.result;
-                    StorageManager.guardarFondo(this.usuario, base64);
-                    UIManager.aplicarFondo(base64);
-                    UIManager.notificar("¡Fondo actualizado!", "success");
-                };
-                reader.readAsDataURL(file);
-            }
+        // Fondo de pantalla (Galería Predefinida)
+        document.getElementById("btn-cambiar-fondo").onclick = () => {
+            const fondoActual = StorageManager.obtenerFondo(this.usuario);
+            UIManager.mostrarSelectorFondo(fondoActual, (idSeleccionado) => {
+                StorageManager.guardarFondo(this.usuario, idSeleccionado);
+                UIManager.aplicarFondo(idSeleccionado);
+                UIManager.notificar("¡Fondo actualizado!", "success");
+            });
         };
+
+        // Exportar a Excel (Global)
+        const btnExportTodo = document.getElementById("btn-exportar-todo");
+        if (btnExportTodo) {
+            btnExportTodo.onclick = () => this.exportarAExcel(`Reporte_General_${this.usuario}`, this.transacciones);
+        }
+    },
+
+    exportarAExcel(nombreArchivo, lista) {
+        if (!lista || lista.length === 0) {
+            UIManager.notificar("No hay movimientos para exportar", "error");
+            return;
+        }
+
+        try {
+            // Preparar datos para SheetJS
+            const data = lista.map(t => ({
+                "Fecha": new Date(t.id).toLocaleDateString('es-AR'),
+                "Horario": new Date(t.id).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
+                "Descripción": t.descripcion,
+                "Tipo": t.tipo === "gasto" ? "💸 Gasto" : "💰 Ingreso",
+                "Monto": t.monto
+            }));
+
+            // Crear libro y hoja
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(data);
+
+            // Ajustar anchos de columna (opcional pero profesional)
+            const wscols = [
+                { wch: 12 }, // Fecha
+                { wch: 10 }, // Horario
+                { wch: 30 }, // Descripción
+                { wch: 15 }, // Tipo
+                { wch: 15 }, // Monto
+            ];
+            ws['!cols'] = wscols;
+
+            XLSX.utils.book_append_sheet(wb, ws, "Transacciones");
+
+            // Descargar
+            XLSX.writeFile(wb, `Billetera_${nombreArchivo.replace(/\s/g, '_')}.xlsx`);
+            UIManager.notificar("Excel generado con éxito 📗");
+        } catch (error) {
+            console.error("Error al exportar a Excel:", error);
+            UIManager.notificar("Error al generar el archivo", "error");
+        }
     },
 
     procesarNuevaTransaccion(e) {
@@ -361,7 +400,12 @@ const App = {
 
     actualizarUI() {
         const { balance, totalGastos, totalIngresos } = UIManager.actualizarStats(this.presupuesto, this.transacciones);
-        UIManager.renderizarLista(this.transacciones, (id) => this.eliminarTransaccion(id));
+        
+        UIManager.renderizarLista(
+            this.transacciones, 
+            (id) => this.eliminarTransaccion(id),
+            (nombreMes, items) => this.exportarAExcel(`Mes_${nombreMes}_${this.usuario}`, items)
+        );
 
         const pct = UIManager.actualizarProgreso(this.presupuesto, totalGastos, totalIngresos);
 

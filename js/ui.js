@@ -1,5 +1,16 @@
-const UIManager = {
+const FONDOS_PREDEFINIDOS = [
+    { id: 'default', nombre: 'Puro y Simple', url: '', color: 'var(--primary)', isDark: false, preview: 'linear-gradient(135deg, #f5f6fa, #eef0fd)' },
+    { id: 'bg-dark', nombre: 'Ondas de Color', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&format=webp', color: '#4f46e5', isDark: true, preview: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=40&w=400&format=webp' },
+    { id: 'bg-neon', nombre: 'Burbujas Neón', url: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&format=webp', color: '#ec4899', isDark: true, preview: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=40&w=400&format=webp' },
+    { id: 'bg-nature', nombre: 'Montañas Serenas', url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&format=webp', color: '#d97706', isDark: false, preview: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=40&w=400&format=webp' },
+    { id: 'bg-forest', nombre: 'Bosque Místico', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2000&format=webp', color: '#059669', isDark: true, preview: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=40&w=400&format=webp' },
+    { id: 'bg-cyber', nombre: 'Onda Cyber', url: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2000&format=webp', color: '#a855f7', isDark: true, preview: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=40&w=400&format=webp' },
+    { id: 'bg-stars', nombre: 'Cielo Estrellado', url: 'https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?q=80&w=2000&format=webp', color: '#0284c7', isDark: true, preview: 'https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?q=40&w=400&format=webp' },
+    { id: 'bg-sunset', nombre: 'Atardecer Cálido', url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2000&format=webp', color: '#ea580c', isDark: true, preview: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=40&w=400&format=webp' },
+    { id: 'bg-nebula', nombre: 'Nebulosa Púrpura', url: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&format=webp', color: '#9333ea', isDark: true, preview: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=40&w=400&format=webp' }
+];
 
+const UIManager = {
     formatearMoneda(valor) {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency', currency: 'ARS', minimumFractionDigits: 2
@@ -122,7 +133,7 @@ const UIManager = {
     },
 
     // Historial por Mes -> Día
-    renderizarLista(transacciones, onEliminar) {
+    renderizarLista(transacciones, onEliminar, onExportar) {
         const contenedor = document.getElementById("contenedor-transacciones");
         if (!contenedor) return;
 
@@ -149,7 +160,7 @@ const UIManager = {
             const nombreMes = fecha.toLocaleString("es-AR", { month: "long", year: "numeric" });
 
             if (!meses[claveMes]) {
-                meses[claveMes] = { nombre: nombreMes, dias: {} };
+                meses[claveMes] = { nombre: nombreMes, dias: {}, itemsRaw: [] };
             }
 
             const claveDia = this.claveDelDia(t.id);
@@ -157,6 +168,7 @@ const UIManager = {
                 meses[claveMes].dias[claveDia] = { timestamp: t.id, items: [] };
             }
             meses[claveMes].dias[claveDia].items.push(t);
+            meses[claveMes].itemsRaw.push(t); // Para exportar el mes completo
         });
 
         // Renderizar Meses
@@ -170,9 +182,24 @@ const UIManager = {
             const mesHeader = document.createElement("div");
             mesHeader.className = `mes-header ${index === 0 ? "abierto" : "cerrado"}`;
             mesHeader.innerHTML = `
-                <span>${mes.nombre}</span>
-                <span class="toggle-icon">▼</span>
+                <div class="mes-header-info">
+                    <span>${mes.nombre}</span>
+                </div>
+                <div class="mes-header-acciones">
+                    <button class="btn-export-mes" title="Exportar este mes a Excel">
+                        <svg class="excel-icon-small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 3.5 18.5 8H14V3.5zM12 11h2v2h-2v2h-2v-2H8v-2h2v-2h2v2z"/>
+                        </svg>
+                    </button>
+                    <span class="toggle-icon">▼</span>
+                </div>
             `;
+
+            const btnExport = mesHeader.querySelector(".btn-export-mes");
+            btnExport.onclick = (e) => {
+                e.stopPropagation();
+                if (onExportar) onExportar(mes.nombre, mes.itemsRaw);
+            };
 
             const mesContenido = document.createElement("div");
             mesContenido.className = "mes-contenido";
@@ -272,35 +299,34 @@ const UIManager = {
         });
     },
 
-    async aplicarFondo(base64) {
-        if (base64) {
-            document.body.style.backgroundImage = `url(${base64})`;
+    aplicarFondo(idFondo) {
+        // Buscar el fondo seleccionado, si no existe o es base64 viejo (muy largo), usar default
+        let fondo = FONDOS_PREDEFINIDOS.find(f => f.id === idFondo);
+        if (!fondo || idFondo?.length > 100) {
+            fondo = FONDOS_PREDEFINIDOS[0]; // fallback
+        }
+
+        if (fondo.id !== 'default') {
+            document.body.style.backgroundImage = `url(${fondo.url})`;
             document.body.style.backgroundSize = "cover";
             document.body.style.backgroundPosition = "center";
             document.body.style.backgroundAttachment = "fixed";
             document.body.classList.add("has-custom-bg");
             
-            // Extraer, analizar y aplicar colores dinámicos
-            try {
-                const { color, isDark } = await this.analizarImagen(base64);
-                
-                // Aplicar color de acento
-                document.documentElement.style.setProperty('--dynamic-accent', color);
-                
-                // Aplicar contraste según brillo
-                if (isDark) {
-                    document.documentElement.style.setProperty('--dynamic-text', '#ffffff');
-                    document.documentElement.style.setProperty('--dynamic-surface', 'rgba(255, 255, 255, 0.12)');
-                    document.documentElement.style.setProperty('--dynamic-subtext', 'rgba(255, 255, 255, 0.7)');
-                } else {
-                    document.documentElement.style.setProperty('--dynamic-text', '#0d1117');
-                    document.documentElement.style.setProperty('--dynamic-surface', 'rgba(0, 0, 0, 0.1)');
-                    document.documentElement.style.setProperty('--dynamic-subtext', 'rgba(0, 0, 0, 0.6)');
-                }
-            } catch (e) {
-                console.warn("Error analizando imagen:", e);
+            // Aplicar colores dinámicos predefinidos
+            document.documentElement.style.setProperty('--dynamic-accent', fondo.color);
+            
+            if (fondo.isDark) {
+                document.documentElement.style.setProperty('--dynamic-text', '#ffffff');
+                document.documentElement.style.setProperty('--dynamic-surface', 'rgba(255, 255, 255, 0.12)');
+                document.documentElement.style.setProperty('--dynamic-subtext', 'rgba(255, 255, 255, 0.7)');
+            } else {
+                document.documentElement.style.setProperty('--dynamic-text', '#0d1117');
+                document.documentElement.style.setProperty('--dynamic-surface', 'rgba(0, 0, 0, 0.1)');
+                document.documentElement.style.setProperty('--dynamic-subtext', 'rgba(0, 0, 0, 0.6)');
             }
         } else {
+            // Fondo default (malla CSS)
             document.body.style.backgroundImage = "";
             document.body.classList.remove("has-custom-bg");
             document.documentElement.style.removeProperty('--dynamic-accent');
@@ -310,28 +336,46 @@ const UIManager = {
         }
     },
 
-    analizarImagen(base64) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.src = base64;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = 1;
-                canvas.height = 1;
-                ctx.drawImage(img, 0, 0, 1, 1);
-                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                
-                // Color dominante
-                const color = `rgb(${r}, ${g}, ${b})`;
-                
-                // Fórmula de brillo relativo (HSP/YIQ)
-                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-                const isDark = brightness < 128;
-                
-                resolve({ color, isDark });
-            };
-            img.onerror = () => resolve({ color: 'var(--primary)', isDark: false });
+    mostrarSelectorFondo(fondoActual, callbackGuardar) {
+        // Construir la grilla visual de los fondos
+        const grillaHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 10px;">
+                ${FONDOS_PREDEFINIDOS.map(f => `
+                    <div class="fondo-option" data-id="${f.id}" style="
+                        border-radius: 12px; height: 90px; cursor: pointer;
+                        background: ${f.preview.startsWith('http') ? `url('${f.preview}') center/cover` : f.preview};
+                        border: 3px solid ${fondoActual === f.id || (!fondoActual && f.id === 'default') ? 'var(--primary)' : 'transparent'};
+                        transition: transform 0.2s, border-color 0.2s;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                        position: relative; overflow: hidden;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div style="position: absolute; bottom: 0; left:0; right:0; padding: 4px; background: rgba(0,0,0,0.6); color: white; font-size: 0.75rem; text-align: center;">
+                            ${f.nombre}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        Swal.fire({
+            title: "Seleccioná tu Fondo",
+            html: grillaHTML,
+            showConfirmButton: false,
+            showCloseButton: true,
+            customClass: {
+                popup: 'glass-modal'
+            },
+            didOpen: () => {
+                const el = Swal.getHtmlContainer();
+                const options = el.querySelectorAll('.fondo-option');
+                options.forEach(opt => {
+                    opt.onclick = () => {
+                        const id = opt.getAttribute('data-id');
+                        callbackGuardar(id);
+                        Swal.close();
+                    };
+                });
+            }
         });
     },
 
