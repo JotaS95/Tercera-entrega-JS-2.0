@@ -148,8 +148,9 @@ body {
     position: absolute;
     top: 30px;
     left: 40px;
+    right: 40px;
     margin: 0;
-    max-width: 420px;
+    max-width: min(420px, calc(100% - 80px));
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     border-left: 4px solid var(--success);
     padding: 16px 20px;
