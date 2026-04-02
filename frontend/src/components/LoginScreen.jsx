@@ -146,7 +146,13 @@ const LoginScreen = ({ onLoginSuccess }) => {
         </div>
         
         <div className="presentation-footer">
-          <img src="/img/zaviso-brand-mark.jpg" alt="Zaviso" className="footer-logo" />
+          <img 
+            src="./img/zaviso-brand-mark.jpg" 
+            alt="Zaviso" 
+            className="footer-logo" 
+            onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+          />
+          <div className="footer-logo-fallback" style={{ display: 'none' }}>Z</div>
           <span>Desarrollado por <strong>Zaviso</strong></span>
         </div>
       </div>
