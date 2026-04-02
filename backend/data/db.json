@@ -1,0 +1,22 @@
+{
+  "users": {
+    "testusertestuser": {
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
+    },
+    "demo": {
+      "password": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791"
+    }
+  },
+  "data": {
+    "testusertestuser": {
+      "transacciones": [],
+      "presupuesto": 0,
+      "fondo": "default"
+    },
+    "demo": {
+      "transacciones": [],
+      "presupuesto": 0,
+      "fondo": "default"
+    }
+  }
+}
