@@ -970,38 +970,73 @@ input:focus, select:focus {
     color: var(--success);
 }
 
-/* RESPONSIVE */
+
+/* =====================================================
+   RESPONSIVE — TABLET Y MÓVIL
+   ===================================================== */
+
+/* TABLET (≤ 1024px) */
 @media (max-width: 1024px) {
+    /* Convertir la pantalla fija a flujo normal con scroll */
     #login-screen {
+        position: relative !important;
+        inset: auto !important;
+        overflow: visible !important;
+        min-height: 100vh;
         flex-direction: column;
     }
 
     .login-presentation {
         flex: none;
-        padding: 60px 40px;
-        min-height: 400px;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+        width: 100%;
+        min-height: 260px;
+        padding: 48px 32px 40px;
+        justify-content: center;
+        background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%);
+    }
+
+    .presentation-title {
+        font-size: 2.6rem;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+    }
+
+    .presentation-subtitle {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+
+    .presentation-features {
+        gap: 14px;
+    }
+
+    .feature-item {
+        max-width: 100%;
+        padding: 12px 16px;
+    }
+
+    .presentation-advice {
+        align-self: center;
+        margin-bottom: 20px;
+    }
+
+    .presentation-footer {
+        position: static;
+        margin-top: 32px;
+        justify-content: center;
     }
 
     .login-box-wrapper {
         flex: none;
         width: 100%;
-        min-width: 0;
         border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 30px 30px 0 0;
-        padding: 60px 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 0;
+        padding: 48px 32px 60px;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
     }
 
-    .presentation-title {
-        font-size: 3rem;
-    }
-
-    .presentation-footer {
-        position: static;
-        margin-top: 40px;
-    }
-
+    /* Dashboard */
     .sidebar-historial {
         position: fixed;
         left: -320px;
@@ -1013,73 +1048,149 @@ input:focus, select:focus {
         background: white;
     }
 
-    .sidebar-historial.open {
-        left: 0;
-    }
-
-    .hamburger-btn {
-        display: block;
-    }
-
-    .main-content {
-        padding: 20px;
-    }
+    .sidebar-historial.open { left: 0; }
+    .hamburger-btn { display: block; }
+    .main-content { padding: 20px; }
 }
 
+/* MÓVIL (≤ 768px) */
 @media (max-width: 768px) {
+    /* ---- Login ---- */
+    #login-screen {
+        position: relative !important;
+        inset: auto !important;
+        overflow: visible !important;
+        min-height: 100vh;
+        flex-direction: column;
+        background-attachment: scroll;
+    }
+
+    /* Header compacto de marca */
+    .login-presentation {
+        flex: none;
+        width: 100%;
+        padding: 56px 24px 40px;
+        background: linear-gradient(
+            160deg,
+            rgba(13, 17, 23, 0.92) 0%,
+            rgba(67, 97, 238, 0.35) 60%,
+            rgba(13, 17, 23, 0.5) 100%
+        );
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+        gap: 0;
+    }
+
+    .presentation-title {
+        font-size: 2.2rem;
+        letter-spacing: -0.8px;
+        margin-bottom: 10px;
+        line-height: 1.1;
+    }
+
+    .presentation-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        max-width: 100%;
+        opacity: 0.9;
+    }
+
+    /* Ocultar features en móvil para mantener el diseño limpio */
+    .presentation-features {
+        display: none;
+    }
+
+    /* Consejo compacto */
+    .presentation-advice {
+        width: 100%;
+        margin: 20px 0 0;
+        padding: 12px 16px;
+        font-size: 0.82rem;
+        align-self: center;
+    }
+
+    .presentation-footer {
+        position: static;
+        margin-top: 24px;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    .footer-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Caja de login flotante y profesional */
+    .login-box-wrapper {
+        flex: none;
+        width: 100%;
+        border-left: none;
+        border-top: none;
+        border-radius: 28px 28px 0 0;
+        background: linear-gradient(
+            160deg,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(240, 253, 248, 0.98) 100%
+        );
+        backdrop-filter: blur(30px) saturate(200%);
+        box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.25);
+        padding: 36px 24px 60px;
+    }
+
+    .login-box {
+        max-width: 100%;
+        background: transparent;
+    }
+
+    .login-box h2 {
+        font-size: 1.6rem;
+    }
+
+    /* ---- Dashboard ---- */
     .stats-grid {
         grid-template-columns: 1fr 1fr;
     }
     .stat-card.principal {
         grid-column: span 2;
     }
-    
     .navbar-user span#navbar-nombre {
         display: none;
     }
-
     .btn-fondo span {
         display: none;
     }
 }
 
+/* MÓVIL PEQUEÑO (≤ 520px) */
 @media (max-width: 520px) {
+    .presentation-title {
+        font-size: 1.9rem;
+    }
+
+    .login-box-wrapper {
+        padding: 32px 20px 56px;
+        border-radius: 24px 24px 0 0;
+    }
+
+    .login-box h2 {
+        font-size: 1.4rem;
+    }
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
     .stat-card.principal {
         grid-column: span 1;
     }
-    
-    .login-presentation {
-        display: none;
-    }
 
-    .login-box-wrapper {
-        background: transparent;
-        backdrop-filter: none;
-        padding: 20px;
-    }
-
-    .login-box {
-        background: white;
-        padding: 40px 24px;
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-    }
-
-    .navbar {
-        padding: 10px 16px;
-    }
-
-    .form-row-2 {
-        grid-template-columns: 1fr;
-    }
-
-    .form-row-presupuesto {
-        flex-direction: column;
-    }
+    .navbar { padding: 10px 16px; }
+    .form-row-2 { grid-template-columns: 1fr; }
+    .form-row-presupuesto { flex-direction: column; }
+    .main-content { padding: 16px; }
 }
+
 
 /* ========== SMART GLASS (DISEÑO ADAPTABLE) ========== */
 body.has-custom-bg .navbar {
