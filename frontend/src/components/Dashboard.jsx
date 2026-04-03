@@ -25,7 +25,9 @@ const FONDOS_PREDEFINIDOS = [
   { id: 'bg-cyber', nombre: 'Onda Cyber', url: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2000&format=webp', color: '#a855f7', isDark: true, preview: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=40&w=400&format=webp' },
   { id: 'bg-stars', nombre: 'Cielo Estrellado', url: 'https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?q=80&w=2000&format=webp', color: '#0284c7', isDark: true, preview: 'https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?q=40&w=400&format=webp' },
   { id: 'bg-sunset', nombre: 'Atardecer Cálido', url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2000&format=webp', color: '#ea580c', isDark: true, preview: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=40&w=400&format=webp' },
-  { id: 'bg-nebula', nombre: 'Nebulosa Púrpura', url: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&format=webp', color: '#9333ea', isDark: true, preview: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=40&w=400&format=webp' }
+  { id: 'bg-nebula', nombre: 'Nebulosa Púrpura', url: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&format=webp', color: '#9333ea', isDark: true, preview: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=40&w=400&format=webp' },
+  { id: 'bg-autumn', nombre: 'Sendero Otoñal', url: 'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?q=80&w=2000&format=webp', color: '#b45309', isDark: true, preview: 'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?q=40&w=400&format=webp' },
+  { id: 'bg-sky-pink', nombre: 'Cielo Rosado', url: 'https://images.unsplash.com/photo-1503455637927-730bce8583c0?q=80&w=2000&format=webp', color: '#db2777', isDark: true, preview: 'https://images.unsplash.com/photo-1503455637927-730bce8583c0?q=40&w=400&format=webp' }
 ];
 
 const Dashboard = ({ user, userData, onLogout, onRefresh }) => {
