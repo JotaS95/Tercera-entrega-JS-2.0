@@ -11,6 +11,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [registeredUsers, setRegisteredUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -106,13 +107,37 @@ const LoginScreen = ({ onLoginSuccess }) => {
 
   return (
     <div id="login-screen">
+      {/* Botón Hamburguesa Móvil (Solo visible en < 1024px via CSS) */}
+      <button 
+        className={`mobile-hamburger ${isMenuOpen ? 'open' : ''}`} 
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-label="Menú"
+      >
+        <div className="bar1"></div>
+        <div className="bar2"></div>
+        <div className="bar3"></div>
+      </button>
+
+      {/* Overlay para cerrar el menú al hacer click afuera */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="mobile-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Panel de Presentación Izquierdo */}
       <div className="login-presentation">
         <div className="presentation-advice">
           <div className="advice-icon">💡</div>
           <div className="advice-content">
             <strong>CONSEJO:</strong>
-            ¿Quieres tener el control real de tu plata? Usa esta billetera para registrar lo que gastas día a día, y descubre en qué se te va el sueldo. ¡Es el primer paso hacia la tranquilidad financiera!
+            ¿Quieres tener el control real de tu plata? Usa esta billetera para registrar lo que gastas día a día, y descubre en qué se te va sueldo.
           </div>
         </div>
 
@@ -157,7 +182,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         </div>
       </div>
 
-      <div className="login-box-wrapper">
+      <div className={`login-box-wrapper ${isMenuOpen ? 'mobile-open' : ''}`}>
         <div className="login-box">
           <AnimatePresence mode="wait">
             {view === 'initial' && (
@@ -178,7 +203,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
                     <div className="usuarios-chips">
                       {registeredUsers.map(u => (
                         <div key={u} className="chip-usuario">
-                          <span onClick={() => { setSelectedUser(u); setView('login'); }}>{u}</span>
+                          <span onClick={() => { setSelectedUser(u); setView('login'); setIsMenuOpen(false); }}>{u}</span>
                           <button className="chip-del" onClick={(e) => handleDeleteUser(u, e)}>×</button>
                         </div>
                       ))}
@@ -286,6 +311,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         </div>
       </div>
     </div>
+
   );
 };
 
